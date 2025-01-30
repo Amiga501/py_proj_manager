@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py_proj_manager"
+version = "0.0.0.1"
+dependencies = [
+"numpy",
+"pandas",
+]
+
+requires-python = ">=3.12"
+authors = [
+  {name = "Brendan Sloan", email = "brendan.sloan@live.co.uk"},
+]
+maintainers = [
+  {name = "Brendan Sloan", email = "brendan.sloan@live.co.uk"}
+]
+description = "A very simple project management toolset."
+readme = "README.md"
+license = {file = "LICENCE.md"}
+keywords = ["project", "gantt", "critical path", "project management"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python"
+]
+
+[project.optional-dependencies]
+
+
+[project.urls]
+Homepage = "https://example.com"
+Documentation = "https://readthedocs.org"
+Repository = "https://github.com/me/spam.git"
+"Bug Tracker" = "https://github.com/Amiga501/py_proj_manager/issues"
+Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+
+[project.scripts]
+
+
+[project.gui-scripts]
+
+
+[project.entry-points."spam.magical"]
