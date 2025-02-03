@@ -8,6 +8,11 @@ version = "0.0.0.1"
 dependencies = [
 "numpy",
 "pandas",
+"structlog==25.1.*",
+"rich==13.9.4",
+"colorama==0.4.6",
+"pytest==8.3.4",
+"pytest-html==4.1.1",
 ]
 
 requires-python = ">=3.12"
