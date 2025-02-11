@@ -58,3 +58,4 @@ typing_extensions==4.12.2
 tzdata==2024.2
 wcwidth @ file:///Users/ktietz/demo/mc3/conda-bld/wcwidth_1629357192024/work
 wheel==0.45.1
+tqdm==4.67.1
