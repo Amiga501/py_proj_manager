@@ -70,7 +70,7 @@ class Logger():
             if not Path(log_file).parent.is_dir():
                 print("Invalid folder path specified for log file, will "
                       "attempt to create")
-                Path(log_file).mk_dir(parents=True, exist_ok=True)
+                Path(log_file).mkdir(parents=True, exist_ok=True)
             
             dict_config["handlers"]["file"] = {
                 "level": "DEBUG",
