@@ -6,15 +6,16 @@ build-backend = "setuptools.build_meta"
 name = "py_proj_manager"
 version = "0.0.0.1"
 dependencies = [
-"numpy",
-"pandas",
-"structlog==25.1.*",
-"rich==13.9.4",
 "colorama==0.4.6",
+"numpy==2.2.2",
+"pandas==2.2.3",
+"pyjson5==1.6.8",
 "pytest==8.3.4",
 "pytest-html==4.1.1",
+"rich==13.9.4",
+"scipy==1.15.1",
+"structlog==25.1.*",
 "tqdm==4.67.1",
-"pyjson5==1.6.8",
 ]
 
 requires-python = ">=3.12"
