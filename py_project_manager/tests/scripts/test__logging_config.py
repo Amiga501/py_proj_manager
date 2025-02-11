@@ -26,7 +26,7 @@ import time
 from py_project_manager.config import Config
 # Need this to know where to add our test ruleset file
 
-from py_project_manager.tests.lib import MiscTest
+from py_project_manager.tests.lib.test_misc import MiscTest
 # This .py contains generic functions used across testing
 
 # The component under test
