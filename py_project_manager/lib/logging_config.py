@@ -66,11 +66,9 @@ class Logger():
             }
         }
         handlers_ = ["default"]
+        self.log_file_failure_msg = None
         if log_file:
-            if not Path(log_file).parent.is_dir():
-                print("Invalid folder path specified for log file, will "
-                      "attempt to create")
-                Path(log_file).mkdir(parents=True, exist_ok=True)
+            log_file = self.__create_log_file(log_file)
             
             dict_config["handlers"]["file"] = {
                 "level": "DEBUG",
@@ -122,7 +120,34 @@ class Logger():
         # with this pattern, it's rarely necessary to propagate the error up to
         # parent
         self.logger.propagate = False
-
+        
+        if self.log_file_failure_msg:
+            self.logger.error(self.log_file_failure_msg)
+            
+    # -------------------------------------------------------------------------
+    def __create_log_file(self, log_file: str) -> str:
+        """!
+        **Create a log file**
+        
+        @param [in] log_file [str] The proposed full file path of log file
+        
+        @return [str] the path of the actual log file, not necessarily the
+            requested one!
+        
+        """
+        if not Path(log_file).parent.is_dir():
+            print("Invalid folder path specified for log file, will "
+                  "attempt to create")
+            try:
+                Path(log_file).mkdir(parents=True, exist_ok=True)
+            except Exception as exception:
+                self.log_file_failure_msg = (
+                    "Unable to create log file at requested location, "
+                    f"{log_file}, due to {exception}, creating locally...")
+                log_file = str(Path(log_file).name)
+                         
+        return log_file
+        
     # -------------------------------------------------------------------------
     def __get_console_handler(self) -> Callable:
         """
