@@ -69,7 +69,8 @@ class Logger():
         self.log_file_failure_msg = None
         if log_file:
             log_file = self.__create_log_file(log_file)
-            
+        
+        if log_file:
             dict_config["handlers"]["file"] = {
                 "level": "DEBUG",
                 "class": "logging.handlers.TimedRotatingFileHandler",
@@ -141,9 +142,10 @@ class Logger():
             if not Path(Path(log_file).drive).exists():
                 self.log_file_failure_msg = (
                     "Unable to create log file at requested location, "
-                    f"{log_file}, as drive doesn't exist', creating locally..."
+                    f"{log_file}, as drive doesn't exist', won't create log "
+                    "file"
                     )
-                log_file = str(Path(log_file).name)
+                log_file = None
             
             else:
                 try:
