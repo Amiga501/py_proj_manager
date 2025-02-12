@@ -138,7 +138,7 @@ class Logger():
         if not Path(log_file).parent.is_dir():
             print("Invalid folder path specified for log file, will "
                   "attempt to create")
-            if not Path(log_file).drive.exists():
+            if not Path(Path(log_file).drive).exists():
                 self.log_file_failure_msg = (
                     "Unable to create log file at requested location, "
                     f"{log_file}, as drive doesn't exist', creating locally..."
