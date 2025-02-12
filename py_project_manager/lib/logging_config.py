@@ -153,9 +153,20 @@ class Logger():
                 except Exception as exception:
                     self.log_file_failure_msg = (
                         "Unable to create log file at requested location, "
-                        f"{log_file}, due to {exception}, creating locally..."
+                        f"{log_file}, due to {exception}, won't create log"
                         )
-                    log_file = str(Path(log_file).name)
+                    log_file = None
+                    
+                try:
+                    with open(log_file, "w") as f:
+                        f.writelines(["\n"])
+                        ...
+                except Exception as exception:
+                    self.log_file_failure_msg = (
+                        "Unable to create log file at requested location, "
+                        f"{log_file}, due to {exception}, won't create log"
+                        )
+                    log_file = None
                          
         return log_file
         
