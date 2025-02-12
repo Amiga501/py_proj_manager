@@ -8,7 +8,7 @@ Created on Mon Dec 11 10:31:05 2023
 from collections.abc import Callable
 from pathlib import Path
 
-import logging
+import logging.config
 import structlog
 import sys
 
