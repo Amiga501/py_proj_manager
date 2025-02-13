@@ -42,3 +42,5 @@ class Config:
                                     "py_project_manager",
                                     "tests",
                                     "supporting_data"))
+
+    DATABASE = "sqlite:///C:/Databases/py_project_manager.db"
