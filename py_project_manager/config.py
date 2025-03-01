@@ -50,19 +50,17 @@ class Config:
         log_drive = host_drive_map.get(platform.node()) or Path.cwd().drive
         # This reverts to the drive holding the file if its not in explicit map
         
-        LOG_DIR = str(Path(f"{log_drive}\\", "log_files"))
-        Path(LOG_DIR).mkdir(parents=True, exist_ok=True)
-    
-        TEST_SUPPORTING_DATA = str(Path(library_dir,
-                                        "py_project_manager",
-                                        "tests",
-                                        "supporting_data"))
-        
         DATABASE = "sqlite:///C:/Databases/py_project_manager.db"
     
     else:
         log_drive = os.getenv("GITHUB_WORKSPACE", os.getcwd())
-        LOG_DIR = str(Path(f"{log_drive}\\", "log_files"))
-        Path(LOG_DIR).mkdir(parents=True, exist_ok=True)
+                
         DATABASE = "py_project_manager.db"
     
+    LOG_DIR = str(Path(f"{log_drive}\\", "log_files"))
+    Path(LOG_DIR).mkdir(parents=True, exist_ok=True)
+    
+    TEST_SUPPORTING_DATA = str(Path(library_dir,
+                                    "py_project_manager",
+                                    "tests",
+                                    "supporting_data"))
