@@ -18,6 +18,7 @@ dependencies = [
 "pytest-html==4.1.1",
 "rich==13.9.4",
 "scipy==1.15.1",
+"sqlalchemy==2.0.38",
 "structlog==25.1.*",
 "tqdm==4.67.1",
 ]
