@@ -61,6 +61,8 @@ class Config:
         DATABASE = "sqlite:///C:/Databases/py_project_manager.db"
     
     else:
-        
+        log_drive = os.getenv("GITHUB_WORKSPACE", os.getcwd())
+        LOG_DIR = str(Path(f"{log_drive}\\", "log_files"))
+        Path(LOG_DIR).mkdir(parents=True, exist_ok=True)
         DATABASE = "py_project_manager.db"
     
