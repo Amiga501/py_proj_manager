@@ -43,15 +43,25 @@ class Logger():
     # -------------------------------------------------------------------------
     def __init__(self, *,
                  logger_name: str = None,
-                 log_file: str = None):
+                 log_file: str = None,
+                 log_level: str = "DEBUG",
+                 ):
         """!
         Start a new logger instance
 
         @param [in] logger_name [str] The name of the logger
         @param [in] log_file [str] The name of the log file, leave empty for 
             stream only
-            
+        @param [in] log_level [str] One of "DEBUG", "INFO", "WARNING", "ERROR"
+        
         """
+        log_levels = {
+            "DEBUG": logging.DEBUG,
+            "INFO": logging.INFO,
+            "WARNING": logging.WARNING,
+            "ERROR": logging.ERROR
+            }
+        log_level_= log_levels.get(log_level) or logging.DEBUG
         
         timestamper = structlog.processors.TimeStamper(fmt="iso")
         
@@ -107,7 +117,8 @@ class Logger():
                 structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
             ],
             logger_factory=structlog.stdlib.LoggerFactory(),
-            wrapper_class=structlog.stdlib.BoundLogger,
+            #wrapper_class=structlog.stdlib.BoundLogger,
+            wrapper_class=structlog.make_filtering_bound_logger(log_level_),
             cache_logger_on_first_use=True,
         ) 
 

@@ -39,8 +39,8 @@ log_name = f"{Path(__file__).stem}"
 logger_ = Logger(logger_name=log_name,
                 log_file=Path(Config.LOG_DIR,
                               f"{log_name}.log"),
+                log_level="DEBUG",
                 )
-logger_.set_log_level(log_level="DEBUG")
 logger = logger_.get_logger()
 
 
@@ -62,7 +62,33 @@ class HumanResource(Base):
     surname: str = Column(String)
     email: str = Column(String)
     division: str = Column(String)
-    working_week_hrs: int = Column(String)
+    working_week_hrs: float = Column(Float)
+    
+    # -------------------------------------------------------------------------
+    def __init__(self, *,
+                 id: int = None,
+                 forename: str,
+                 surname: str,
+                 email: str,
+                 division: str,
+                 working_week_hrs: float,
+                 ):
+        self.id = id
+        self.forename = forename
+        self.surname = surname
+        self.email = email
+        self.division = division
+        self.working_week_hrs = working_week_hrs
+    
+    # -------------------------------------------------------------------------
+    def as_dict(self):
+        return {"id": self.id,
+                "forename": self.forename,
+                "surname": self.surname,
+                "email": self.email,
+                "division": self.division,
+                "working_week_hrs": self.working_week_hrs,
+                }
 
 
 # -----------------------------------------------------------------------------
@@ -79,6 +105,23 @@ class Organisation(Base):
     name: str = Column(String)
     logo_path: str = Column(String, nullable = True)
     
+    # -------------------------------------------------------------------------
+    def __init__(self, *,
+                 id: int = None,
+                 name: str,
+                 logo_path: str,
+                 ):
+        self.id = id
+        self.name = name
+        self.logo_path = logo_path
+    
+    # -------------------------------------------------------------------------
+    def as_dict(self):
+        return {"id": self.id,
+                "name": self.name,
+                "logo_path": self.logo_path,
+                }
+
 
 # -----------------------------------------------------------------------------
 class Project(Base):
@@ -96,6 +139,29 @@ class Project(Base):
     organisation_id: int = Column(String)  # Could make this a foreign key
     description: str = Column(String)
     
+    # -------------------------------------------------------------------------
+    def __init__(self, *,
+                 id: int = None,
+                 name: str,
+                 code: str,
+                 organisation_id: int,
+                 description: str,
+                 ):
+        self.id = id
+        self.name = name
+        self.code = code
+        self.organisation_id = organisation_id
+        self.description = description
+    
+    # -------------------------------------------------------------------------
+    def as_dict(self):
+        return {"id": self.id,
+                "name": self.name,
+                "code": self.code,
+                "organisation_id": self.organisation_id,
+                "description": self.description,
+                }
+    
 
 # -----------------------------------------------------------------------------
 class Task(Base):
@@ -109,7 +175,7 @@ class Task(Base):
     id: int = Column(Integer, primary_key=True)
     
     name: str = Column(String)
-    project_id: int = Column(String)  # Could make this a foreign key
+    project_id: int = Column(Integer)  # Could make this a foreign key
     precedent_task_ids: str = Column(String, nullable=True)  
     # Will be a json packed list
     
@@ -120,6 +186,7 @@ class Task(Base):
     
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def __init__(self, *,
+                 id: int = None,
                  name: str,
                  project_id: int,
                  precedent_task_ids: str,
@@ -129,7 +196,7 @@ class Task(Base):
         **Instantiate the object**
         
         """
-        self.id = id  # TODO: Check this performs as expected!
+        self.id = id        
         self.name = name
         self.project_id = project_id
         self.precedent_task_ids = precedent_task_ids
@@ -163,6 +230,15 @@ class Task(Base):
         self.precedent_taskitem_ids = pyjson5.encode(sorted(precedent_ids))
         
         return id_to_add in self.get_precedent_taskitem_ids()
+    
+    # -------------------------------------------------------------------------
+    def as_dict(self):
+        return {"id": self.id,
+                "name": self.name,
+                "project_id": self.project_id,
+                "precedent_task_ids": self.precedent_task_ids,
+                "precedent_taskitem_ids": self.precedent_taskitem_ids,
+                }
         
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def delete_precedent_taskitem_id(self, id_to_delete: int) -> bool:
@@ -203,6 +279,7 @@ class Task(Base):
         """
         return pyjson5.decode(self.precedent_taskitem_ids)
     
+    
 # -----------------------------------------------------------------------------
 class TaskItem(Base):
     """!
@@ -216,20 +293,21 @@ class TaskItem(Base):
     
     name: str = Column(String)
     duration_hrs: int = Column(Integer)
-    progress_percent: float = Column(Float, nullabe=True)
+    progress_percent: float = Column(Float, nullable=True)
     task_id: int = Column(Integer)
-    human_resource_id: int = Column(Integer)
+    human_resource_id: int = Column(Integer, nullable=True)
     precedent_taskitem_ids: str = Column(String, nullable=True)  
     # Will be a json packed list
     
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def __init__(self, *,
+                 id: int = None,
                  name: str,
                  duration_hrs: int,
-                 progress_percent: float,
+                 progress_percent: float = None,
                  task_id: int,
-                 human_resource_id: int,
-                 precedent_taskitem_ids: str,
+                 human_resource_id: int = None,
+                 precedent_taskitem_ids: str = None,
                  ):
         """!
         **Instantiate the object**
@@ -271,7 +349,18 @@ class TaskItem(Base):
         self.precedent_taskitem_ids = pyjson5.encode(sorted(precedent_ids))
         
         return id_to_add in self.get_precedent_taskitem_ids()
-        
+    
+    # -------------------------------------------------------------------------
+    def as_dict(self):
+        return {"id": self.id,
+                "name": self.name,
+                "duration_hrs": self.duration_hrs,
+                "progress_percent": self.progress_percent,
+                "task_id": self.task_id,
+                "human_resource_id": self.human_resource_id,
+                "precedent_taskitem_ids": self.precedent_taskitem_ids,
+                }
+    
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def delete_precedent_taskitem_id(self, id_to_delete: int) -> bool:
         """!
