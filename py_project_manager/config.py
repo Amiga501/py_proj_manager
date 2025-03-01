@@ -55,7 +55,7 @@ class Config:
     else:
         log_drive = os.getenv("GITHUB_WORKSPACE", os.getcwd())
                 
-        DATABASE = "py_project_manager.db"
+        DATABASE = "sqlite:///py_project_manager.db"
     
     LOG_DIR = str(Path(f"{log_drive}\\", "log_files"))
     Path(LOG_DIR).mkdir(parents=True, exist_ok=True)
