@@ -136,7 +136,7 @@ class Project(Base):
     
     name: str = Column(String)
     code: str = Column(String)
-    organisation_id: int = Column(String)  # Could make this a foreign key
+    organisation_id: int = Column(Integer)  # Could make this a foreign key
     description: str = Column(String)
     
     # -------------------------------------------------------------------------
