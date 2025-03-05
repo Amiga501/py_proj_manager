@@ -22,8 +22,6 @@ import sqlalchemy as db
 # %% py_project_manager imports
 from py_project_manager.config import Config
 
-from py_project_manager.lib.logging_config import Logger
-
 from py_project_manager.api.models.tables import (
     HumanResource,
     Organisation,
@@ -661,7 +659,7 @@ class DatabaseHandler:
             temporary surge option. Maybe move these numbers to a config file
             item?
             
-        @return [dict]
+        @return [HumanResource]
         
         """
         # TODO Move week_hrs limits to config file
@@ -672,21 +670,23 @@ class DatabaseHandler:
         if email_check:
             msg = ("When trying to create a new HumanResource, the supplied "
                    f"email: {email} is not unique, already exists. Cannot "
-                   "create new resource and will return existing")
+                   "create new resource and will return nothing")
             self.logger.warning(msg)
-            return email_check
+            return {}
         
         # Check working_week_hrs is >= 8 <= 80
         if working_week_hrs < 8.0:
             msg = (f"Specified weekly working hours ({working_week_hrs}) is "
-                   f"too small for user {email}, minimum is 8.0 hrs")
-            self.logger.error(msg)
-            return None
+                   f"too small for user {email}, minimum is 8.0 hrs, setting "
+                   "to minimum")
+            self.logger.warning(msg)
+            working_week_hrs = 8.0
         elif working_week_hrs > 80.0:
             msg = (f"Specified weekly working hours ({working_week_hrs}) is "
-                   f"too large for user {email}, maximum is 80.0 hrs")
+                   f"too large for user {email}, maximum is 80.0 hrs, setting "
+                   "to maximum")
             self.logger.error(msg)
-            return None
+            working_week_hrs = 80.0
         
         new_human_resource = HumanResource(
             **{"forename": forename,
@@ -703,6 +703,7 @@ class DatabaseHandler:
         
         hr_rtns = self.get_human_resource(
             email=email)
+        
         return hr_rtns[0]
         
     # -------------------------------------------------------------------------
@@ -756,7 +757,8 @@ class DatabaseHandler:
     def create_project(self, *,
                        name: str,
                        code: str,
-                       organisation_name: str,
+                       organisation_id: int = None,
+                       organisation_name: str = None,
                        description: str,
                        ) -> dict:
         """!
@@ -770,39 +772,50 @@ class DatabaseHandler:
         @return [dict] The entered (or retrieved if duplicate) dict of obj
         
         """
-        # First, check does the code already exist - codes should be unique
+        # Get the organisation id
+        if not organisation_id and not organisation_name:
+            self.logger.error(
+                "Need to supply either 'organisation_name' or "
+                "'organisation_id' when attempting to create a project")
+            return None
+        if not organisation_id:
+            rtn_ = self.get_organisation(name=organisation_name)
+            if len(rtn_) != 1:
+                self.logger.error(
+                    f"Invalid organisation name {organisation_name} supplied, "
+                    "doesn't exist, cannot create project")
+                return None
+            organisation_id = rtn_[0].id
+        
+        # Check does the code already exist - codes should be unique
         code_rtns = self.get_project(
             code=code,
             )
         if code_rtns:
-            self.logger.warning(
-                "A project already exists for that code, cannot add another")
             if len(code_rtns) > 1:
                 # WTF - shouldn't be here
                 self.logger.critical(
                     f"Duplicates exist for project code {code} - how??? "
                     " This will break code")
-                return {}
+                return None
             else:
-                return code_rtns[0]
-        
-        # Check does the organisation name exist
-        organ_rtns = self.get_organisation(
-            name=organisation_name,
-            )
-        
-        if not organ_rtns:
-            self.logger.error(
-                f"No organisation exists for name: {organisation_name}, "
-                "cannot create project")
-            return {}
-        if len(organ_rtns) > 1:
-            self.logger.critical(
-                f"The organisation name ({organisation_name}) is not unique, "
-                "cannot proceed to create a project")
-            return {}
-        organisation_id = organ_rtns[0].id
-        
+                rtn = code_rtns[0]
+                if (rtn.name == name 
+                        and rtn.organisation_id == organisation_id):                      
+                    self.logger.warning(
+                        "A project already exists for that code, name and " 
+                        "organisation, cannot add another")
+                    return rtn
+                else:
+                    other_org_name = self.get_organisation(
+                        id=rtn.organisation_id)[0].name
+                    
+                    self.logger.error(
+                        "A project already exists for that code, but with "
+                        f"different name: {rtn.name} or different organisation"
+                        f" {other_org_name}, not adding")
+                    return None
+                    
         # Then check does the project name already exist - duplicate names may 
         # exist with separate codes, but it is a warning scenario incase of 
         # input error
@@ -812,7 +825,7 @@ class DatabaseHandler:
         if name_rtns:
             self.logger.warning(
                 "The following project codes already have a project name of "
-                f"{name}: {', '.join([i['name'] for i in name_rtns])}. Will "
+                f"{name}: {', '.join([i.name for i in name_rtns])}. Will "
                 "continue to create the project.")
             
         new_project = Project(
@@ -1104,6 +1117,7 @@ class DatabaseHandler:
     
     # -------------------------------------------------------------------------
     def get_organisation(self, *,
+                         id: int = None,
                          name: str = None,
                          logo_path: str = None,
                          ) -> list[dict]:
