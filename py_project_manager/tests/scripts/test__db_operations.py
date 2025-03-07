@@ -198,8 +198,8 @@ class Test__HumanResource:
         
         MiscTest.process_returns(
             test_no=test, 
-            result=len(created_2),
-            expected_response=0,
+            result=created_2,
+            expected_response=None,
             )
         
         retrieved = retrieved_[0]
@@ -925,7 +925,7 @@ class Test__Task:
     
     # -------------------------------------------------------------------------
     # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
-    def test__create_task(self=None):
+    def test__create_task_project_by_code(self=None):
         """!
         Testing simple task
         
@@ -984,7 +984,896 @@ class Test__Task:
         MiscTest.demark_test()
         
     # -------------------------------------------------------------------------
-    
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_project_by_id(self=None):
+        """!
+        Testing simple task
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        created_proj = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_ = db_handler.create_task(
+            name="Test Task #1",
+            project_id=created_proj.id,
+            )
+        
+        retrieved_ = db_handler.get_task(
+            id=created_.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_),
+            expected_response=1,
+            )
+        
+        if len(retrieved_) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        retrieved = retrieved_[0]
+        MiscTest.process_returns(
+            test_no=test, 
+            result=retrieved.as_dict(),
+            expected_response=created_.as_dict(),
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_project_by_name(self=None):
+        """!
+        Testing simple task
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_ = db_handler.create_task(
+            name="Test Task #1",
+            project_name="Test Proj #1",
+            )
+        
+        retrieved_ = db_handler.get_task(
+            id=created_.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_),
+            expected_response=1,
+            )
+        
+        if len(retrieved_) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        retrieved = retrieved_[0]
+        MiscTest.process_returns(
+            test_no=test, 
+            result=retrieved.as_dict(),
+            expected_response=created_.as_dict(),
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_with_precedent_task(self=None):
+        """!
+        Testing simple task with a precedent
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_1 = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            )
+        
+        retrieved_1 = db_handler.get_task(
+            id=created_1.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_1),
+            expected_response=1,
+            )
+        
+        if len(retrieved_1) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        retrieved = retrieved_1[0]
+        MiscTest.process_returns(
+            test_no=test, 
+            result=retrieved.as_dict(),
+            expected_response=created_1.as_dict(),
+            )
+        
+        created_2 = db_handler.create_task(
+            name="Test Task #2",
+            project_code="XXX_",
+            precedent_task_ids=[created_1.id,],
+            )
+        
+        retrieved_2 = db_handler.get_task(
+            id=created_2.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_2),
+            expected_response=1,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_with_precedent_task_and_taskitems(self=None):
+        """!
+        Testing simple task with precedent task and task items
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_1 = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            )
+        
+        retrieved_1 = db_handler.get_task(
+            id=created_1.id,
+            )
+        
+        _ = db_handler.create_taskitem(
+            task_id=created_1.id,
+            name="Test TaskItem #1",
+            duration_hrs=40,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_1),
+            expected_response=1,
+            )
+        
+        if len(retrieved_1) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        retrieved = retrieved_1[0]
+        MiscTest.process_returns(
+            test_no=test, 
+            result=retrieved.as_dict(),
+            expected_response=created_1.as_dict(),
+            )
+        
+        created_2 = db_handler.create_task(
+            name="Test Task #2",
+            project_code="XXX_",
+            precedent_task_ids=[created_1.id,],
+            )
+        
+        retrieved_2 = db_handler.get_task(
+            id=created_2.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_2),
+            expected_response=1,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__wrong_project_code(self=None):
+        """!
+        Testing attempted creation with wrong project code
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )          
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_ = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXY_",
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_,
+            expected_response=None,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__wrong_project_name(self=None):
+        """!
+        Testing attempted creation with wrong project name
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_ = db_handler.create_task(
+            name="Test Task #1",
+            project_name="Test Proj #2",
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_,
+            expected_response=None,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__wrong_project_id(self=None):
+        """!
+        Testing attempted creation with wrong project id
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_ = db_handler.create_task(
+            name="Test Task #1",
+            project_id=2,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_,
+            expected_response=None,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__conflicting_project_code_name(self=None):
+        """!
+        Testing attempted creation with conflicting project code & names
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )          
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        _ = db_handler.create_project(
+            name="Test Proj #2",
+            code="XXY_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_ = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            project_name="Test Proj #2",
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_,
+            expected_response=None,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_with_invalid_precedent_id(self=None):
+        """!
+        Testing simple task with an invalid precedent by id
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_1 = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            )
+        
+        retrieved_1 = db_handler.get_task(
+            id=created_1.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_1),
+            expected_response=1,
+            )
+        
+        if len(retrieved_1) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        retrieved = retrieved_1[0]
+        MiscTest.process_returns(
+            test_no=test, 
+            result=retrieved.as_dict(),
+            expected_response=created_1.as_dict(),
+            )
+        
+        created_2 = db_handler.create_task(
+            name="Test Task #2",
+            project_code="XXX_",
+            precedent_task_ids=[2,],
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_2,
+            expected_response=None,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_with_invalid_precedent_name(self=None):
+        """!
+        Testing simple task with an invalid precedent by name
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_1 = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            )
+        
+        retrieved_1 = db_handler.get_task(
+            id=created_1.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_1),
+            expected_response=1,
+            )
+        
+        if len(retrieved_1) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        retrieved = retrieved_1[0]
+        MiscTest.process_returns(
+            test_no=test, 
+            result=retrieved.as_dict(),
+            expected_response=created_1.as_dict(),
+            )
+        
+        created_2 = db_handler.create_task(
+            name="Test Task #2",
+            project_code="XXX_",
+            precedent_task_names=["Test Task #2"],
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_2,
+            expected_response=None,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_with_duplicate_precedent_hybrid_id_name(self=None):
+        """!
+        Testing simple task with a predecent specified by both name and id
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_1 = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            )
+        
+        retrieved_1 = db_handler.get_task(
+            id=created_1.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_1),
+            expected_response=1,
+            )
+        
+        if len(retrieved_1) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        retrieved = retrieved_1[0]
+        MiscTest.process_returns(
+            test_no=test, 
+            result=retrieved.as_dict(),
+            expected_response=created_1.as_dict(),
+            )
+        
+        created_2 = db_handler.create_task(
+            name="Test Task #2",
+            project_code="XXX_",
+            precedent_task_names=["Test Task #1"],
+            precedent_task_ids=[1,],
+            )
+        
+        retrieved_2 = db_handler.get_task(
+            id=created_2.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_2.as_dict(),
+            expected_response=retrieved_2[0].as_dict(),
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_with_precedent_task_invalid_taskitem_id(self = None):
+        """!
+        Testing simple task with precedent task and invalid task item id
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+                   
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_1 = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            )
+        
+        retrieved_1 = db_handler.get_task(
+            id=created_1.id,
+            )
+        
+        _ = db_handler.create_taskitem(
+            task_id=created_1.id,
+            name="Test TaskItem #1",
+            duration_hrs=40,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_1.as_dict(),
+            expected_response=retrieved_1[0].as_dict(),
+            )
+        
+        if len(retrieved_1) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        retrieved = retrieved_1[0]
+        MiscTest.process_returns(
+            test_no=test, 
+            result=retrieved.as_dict(),
+            expected_response=created_1.as_dict(),
+            )
+        
+        created_2 = db_handler.create_task(
+            name="Test Task #2",
+            project_code="XXX_",
+            precedent_task_ids=[5,],
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_2,
+            expected_response=None,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_with_precedent_task_invalid_taskitem_nm(self = None):
+        """!
+        Testing simple task with precedent task and invalid task item name
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+                   
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_1 = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            )
+        
+        retrieved_1 = db_handler.get_task(
+            id=created_1.id,
+            )
+        
+        _ = db_handler.create_taskitem(
+            task_id=created_1.id,
+            name="Test TaskItem #1",
+            duration_hrs=40,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_1.as_dict(),
+            expected_response=retrieved_1[0].as_dict(),
+            )
+        
+        if len(retrieved_1) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        retrieved = retrieved_1[0]
+        MiscTest.process_returns(
+            test_no=test, 
+            result=retrieved.as_dict(),
+            expected_response=created_1.as_dict(),
+            )
+        
+        created_2 = db_handler.create_task(
+            name="Test Task #2",
+            project_code="XXX_",
+            precedent_task_names=["Test TaskItem #2",],
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_2,
+            expected_response=None,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()
+        
+    # -------------------------------------------------------------------------
+    # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    def test__create_task_duplicate_name(self=None):
+        """!
+        Testing task with duplicate name
+        
+        """        
+        test = inspect.stack()[0][3]  # The name of this function (test)
+        print(f"{test}()")
+                
+        logger = get_logger(test)
+        
+        db_handler = DatabaseHandler(
+            logger=logger,
+            )
+           
+        
+        _ = db_handler.create_organisation(
+            name="Test Organ Name #1",
+            logo_path="ExampleLogo.png")
+                
+        _ = db_handler.create_project(
+            name="Test Proj #1",
+            code="XXX_",
+            organisation_name="Test Organ Name #1",
+            description="blah blah",
+            )
+        
+        created_1 = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            )
+        
+        retrieved_ = db_handler.get_task(
+            id=created_1.id,
+            )
+        
+        MiscTest.process_returns(
+            test_no=test, 
+            result=len(retrieved_),
+            expected_response=1,
+            )
+        
+        created_2 = db_handler.create_task(
+            name="Test Task #1",
+            project_code="XXX_",
+            )
+        
+        if len(retrieved_) != 1:
+            print("Exiting due to unexpected length of return from "
+                  "get_project()")
+            reset_database(db_handler)
+            MiscTest.demark_test()
+            return
+                
+        MiscTest.process_returns(
+            test_no=test, 
+            result=created_2,
+            expected_response=None,
+            )
+        
+        reset_database(db_handler)
+        MiscTest.demark_test()    
+
 
 # -----------------------------------------------------------------------------
 class Test__TaskItem:
@@ -1102,7 +1991,20 @@ if __name__ == "__main__":
     # Test__Project().test__invalid_organisation()
     # Test__Project().test__duplicate_names_different_codes()
     
-    # Test__Task().test__create_task()
+    # Test__Task().test__create_task_project_by_code()
+    # Test__Task().test__create_task_project_by_id()
+    # Test__Task().test__create_task_project_by_name()
+    # Test__Task().test__create_task_with_precedent_task()
+    # Test__Task().test__create_task_with_precedent_task_and_taskitems()
+    # Test__Task.test__wrong_project_code()
+    # Test__Task.test__wrong_project_id()
+    # Test__Task.test__wrong_project_name()
+    # Test__Task.test__conflicting_project_code_name()
+    # Test__Task().test__create_task_with_invalid_precedent_id()
+    # Test__Task().test__create_task_with_invalid_precedent_name()
+    # Test__Task().test__create_task_with_duplicate_precedent_hybrid_id_name()
+    # Test__Task().test__create_task_with_precedent_task_invalid_taskitem_id()
+    # Test__Task().test__create_task_with_precedent_task_invalid_taskitem_nm()
     
     # Test__TaskItem.test__create_task_item()
     
