@@ -158,7 +158,14 @@ class DatabaseHandler:
         
         all_task_ids = []
         
+        n_precedent_task_ids = 0
+        n_precedent_task_names = 0
+        
         if precedent_task_ids:
+            if isinstance(precedent_task_ids, int):
+                precedent_task_ids = [precedent_task_ids]
+            
+            n_precedent_task_ids = len(precedent_task_ids)
             for id_ in precedent_task_ids:
                 if not self.get_task(
                         id=id_,
@@ -169,6 +176,10 @@ class DatabaseHandler:
                 all_task_ids.append(id_)
         
         if precedent_task_names:
+            if isinstance(precedent_task_names, str):
+                precedent_task_names = [precedent_task_names]
+                
+            n_precedent_task_names = len(precedent_task_names)
             for name_ in precedent_task_names:
                 if not (tasks_ := self.get_task(
                         name=name_,
@@ -186,8 +197,8 @@ class DatabaseHandler:
         
         all_task_ids_ = sorted(list(set(all_task_ids)))
         
-        if len(all_task_ids_) < (len(precedent_task_ids)
-                                 + len(precedent_task_names)):
+        if len(all_task_ids_) < (n_precedent_task_ids
+                                 + n_precedent_task_names):
             msg = ("The valid task ids are less than supplied ids and names, "
                    "this may be due to duplicates")
             self.logger.warning(msg)
@@ -475,7 +486,7 @@ class DatabaseHandler:
                 return None
         
         if project_id:
-            temp = self.get_project(code=project_id)
+            temp = self.get_project(id=project_id)
             if temp:
                 project_id_rtns.append(temp[0].id)
                 # The project id will be unique, so will always be at most 1 
@@ -488,7 +499,7 @@ class DatabaseHandler:
         
     
         if project_name:
-            temp = self.get_project(code=project_name)
+            temp = self.get_project(name=project_name)
             if len(temp) != 1:
                 msg = (f"The supplied project name: {project_name} yielded "
                        f"{len(temp)} projects, these being (by code): "
@@ -672,7 +683,7 @@ class DatabaseHandler:
                    f"email: {email} is not unique, already exists. Cannot "
                    "create new resource and will return nothing")
             self.logger.warning(msg)
-            return {}
+            return None
         
         # Check working_week_hrs is >= 8 <= 80
         if working_week_hrs < 8.0:
@@ -734,7 +745,7 @@ class DatabaseHandler:
                 self.logger.critical(
                     f"Duplicates exist for organisation name {name} - how??? "
                     " This will break code")
-                return {}
+                return None
             else:
                 return organ_rtns[0]
         
@@ -898,9 +909,9 @@ class DatabaseHandler:
                 project_name,
                 )):
             msg = ("Unable to create task due to invalid project description "
-                   "provided, check logs. Not creating task: {name} ")
+                   f"provided, check logs. Not creating task: {name} ")
             self.logger.error(msg)
-            return {}
+            return None
                 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check the precedent tasks are valid
@@ -914,7 +925,7 @@ class DatabaseHandler:
                        "descriptions provided, check logs. Not creating task "
                        f"{name}")
                 self.logger.error(msg)
-                return {}
+                return None
         
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check the precedent tasksitems are valid
@@ -929,7 +940,7 @@ class DatabaseHandler:
                        "taskitem descriptions provided, check logs. Not "
                        f"creating task {name}")
                 self.logger.error(msg)
-                return {}
+                return None
         
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check does the task name already exist within the project
@@ -945,7 +956,7 @@ class DatabaseHandler:
                    f"{project_.name}, cannot add another task of same name"
                    )
             self.logger.error(msg)
-            return {}
+            return None
             
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Create the task       
@@ -1006,7 +1017,7 @@ class DatabaseHandler:
             msg = ("Unable to create taskitem due to invalid task description "
                    "provided, check logs. Not creating taskitem: {name} ")
             self.logger.error(msg)
-            return {}
+            return None
         
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check the human resource description provided is unique and valid
@@ -1024,7 +1035,7 @@ class DatabaseHandler:
                    "'human_resource_email' has been provided, but its invalid,"
                    " so not creating TaskItem")
             self.logger.error(msg)
-            return {}
+            return None
             
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check the duration_hrs is valid
@@ -1034,7 +1045,7 @@ class DatabaseHandler:
             msg = ("Unable to create taskitem due to invalid duration in hrs"
                    "provided, check logs. Not creating taskitem: {name} ")
             self.logger.error(msg)
-            return {}
+            return None
         
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check the progress_percent is valid
@@ -1044,7 +1055,7 @@ class DatabaseHandler:
             msg = ("Unable to create taskitem due to invalid progress "
                    "provided, check logs. Not creating taskitem: {name} ")
             self.logger.error(msg)
-            return {}
+            return None
         
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check the precedent_taskitems are valid
@@ -1059,7 +1070,7 @@ class DatabaseHandler:
                        "taskitem descriptions provided, check logs. Not "
                        f"creating taskitem {name}")
                 self.logger.error(msg)
-                return {}
+                return None
             
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Check does the task item name already exist within the task
@@ -1074,7 +1085,7 @@ class DatabaseHandler:
                    f"{task_.name}, cannot add another task of same name"
                    )
             self.logger.error(msg)
-            return {}
+            return None
         
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Create the taskitem
