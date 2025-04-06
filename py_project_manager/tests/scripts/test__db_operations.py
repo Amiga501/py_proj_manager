@@ -28,6 +28,10 @@ import time
 from py_project_manager.config import Config
 # Need this to know where to add our test ruleset file
 
+from py_project_manager.lib.loggers import ( 
+    tests_logger as LOGGER,
+    )
+
 from py_project_manager.tests.lib.test_misc import MiscTest
 # This .py contains generic functions used across testing
 
@@ -59,20 +63,6 @@ from py_project_manager.api.services.db_handler import (
 
 # %% Functions
 
-# -----------------------------------------------------------------------------
-def get_logger(test_name: str ) -> Callable:
-    """!
-    **Get a logger handle**
-    
-    """
-    logger_ = Logger(
-        logger_name=f"{test_name}",
-        log_file=str(Path(Config.TEST_SUPPORTING_DATA, 
-                          f"{test_name}.log")),
-        )
-    logger = logger_.get_logger()
-    
-    return logger
 
 # -----------------------------------------------------------------------------
 def reset_database( 
@@ -95,8 +85,6 @@ def reset_database(
 
 # %% Pre testing configuration
 
-logger = get_logger("PreTestConfig")
-
 
 # %% Classes
 
@@ -108,7 +96,6 @@ class Test__HumanResource:
     """
     
     db_handler = DatabaseHandler(
-        logger=logger,
         )
     
     reset_database(db_handler)
@@ -122,11 +109,9 @@ class Test__HumanResource:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
-        
+                 
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         created_ = db_handler.create_human_resource(

@@ -24,24 +24,15 @@ from sqlalchemy.orm import DeclarativeBase
 import pyjson5
 
 # %% py_project_manager imports
-from py_project_manager.lib.logging_config import Logger
-
-from py_project_manager.config import Config
-
+from py_project_manager.lib.loggers import ( 
+    api_models_logger as LOGGER,
+    )
 
 # %% Module level configuration
 
 # declarative base class
 class Base(DeclarativeBase):
     pass
-
-log_name = f"{Path(__file__).stem}"
-logger_ = Logger(logger_name=log_name,
-                log_file=Path(Config.LOG_DIR,
-                              f"{log_name}.log"),
-                log_level="DEBUG",
-                )
-logger = logger_.get_logger()
 
 
 # %% Classes (objects)
@@ -213,13 +204,13 @@ class Task(Base):
         
         """
         if not isinstance(id_to_add, int):
-            logger.error(
+            LOGGER.error(
                 f"Request to add task item id {id_to_add} to {self.name} as a "
                 "precedent abandoned as supplied entry is not an 'int'")
             return False
         
         if id_to_add in self.get_precedent_taskitem_ids():
-            logger.error(
+            LOGGER.error(
                 f"Request to add task item id {id_to_add} to {self.name} as a "
                 "precedent abandoned as it is already a precedent")
             return False
@@ -251,13 +242,13 @@ class Task(Base):
         
         """
         if not isinstance(id_to_delete, int):
-            logger.error(
+            LOGGER.error(
                 f"Request to delete task id {id_to_delete} from {self.name} "
                 "dependents abandoned as supplied entry is not an 'int'")
             return False
         
         if id_to_delete not in self.get_precedent_taskitem_ids():
-            logger.error(
+            LOGGER.error(
                 f"Request to delete task id {id_to_delete} from {self.name} "
                 "precedents abandoned as it does not exist in precedents")
             return False
@@ -332,13 +323,13 @@ class TaskItem(Base):
         
         """
         if not isinstance(id_to_add, int):
-            logger.error(
+            LOGGER.error(
                 f"Request to add task item id {id_to_add} to {self.name} as a "
                 "precedent abandoned as supplied entry is not an 'int'")
             return False
         
         if id_to_add in self.get_precedent_taskitem_ids():
-            logger.error(
+            LOGGER.error(
                 f"Request to add task item id {id_to_add} to {self.name} as a "
                 "precedent abandoned as it is already a precedent")
             return False
@@ -372,13 +363,13 @@ class TaskItem(Base):
         
         """
         if not isinstance(id_to_delete, int):
-            logger.error(
+            LOGGER.error(
                 f"Request to delete task id {id_to_delete} from {self.name} "
                 "dependents abandoned as supplied entry is not an 'int'")
             return False
         
         if id_to_delete not in self.get_precedent_taskitem_ids():
-            logger.error(
+            LOGGER.error(
                 f"Request to delete task id {id_to_delete} from {self.name} "
                 "precedents abandoned as it does not exist in precedents")
             return False

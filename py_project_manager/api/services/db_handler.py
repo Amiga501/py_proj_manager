@@ -22,6 +22,10 @@ import sqlalchemy as db
 # %% py_project_manager imports
 from py_project_manager.config import Config
 
+from py_project_manager.lib.loggers import ( 
+    db_handler_logger as LOGGER,
+    )
+
 from py_project_manager.api.models.tables import (
     HumanResource,
     Organisation,
@@ -98,7 +102,7 @@ class DatabaseHandler:
     
     # -------------------------------------------------------------------------
     def __init__(self, *,
-                 logger: Callable,
+                 logger: Callable = None,
                  warning_on_table_creation: bool = False,
                  ):
         """!
@@ -110,7 +114,11 @@ class DatabaseHandler:
             warning entry on table creation
     
         """
-        self.logger = logger
+        if not logger:
+            self.logger = LOGGER
+        else: 
+            self.logger = logger
+        
         self.warning_on_table_creation = warning_on_table_creation
         
         db_ = Config.DATABASE
