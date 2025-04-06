@@ -156,10 +156,8 @@ class Test__HumanResource:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         created_1 = db_handler.create_human_resource(
@@ -207,10 +205,8 @@ class Test__HumanResource:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         created_1 = db_handler.create_human_resource(
@@ -250,10 +246,8 @@ class Test__HumanResource:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         created_1 = db_handler.create_human_resource(
@@ -292,11 +286,9 @@ class Test__HumanResource:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         created_1 = db_handler.create_human_resource(
@@ -336,10 +328,8 @@ class Test__HumanResource:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         created_1 = db_handler.create_human_resource(
@@ -379,10 +369,8 @@ class Test__HumanResource:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         created_1 = db_handler.create_human_resource(
@@ -436,7 +424,7 @@ class Test__Organisation:
     """
     
     db_handler = DatabaseHandler(
-        logger=logger,
+        logger=LOGGER,
         )
     
     reset_database(db_handler)
@@ -451,10 +439,9 @@ class Test__Organisation:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         created_ = db_handler.create_organisation(
@@ -498,10 +485,8 @@ class Test__Organisation:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         created_1 = db_handler.create_organisation(
@@ -552,7 +537,7 @@ class Test__Project:
     """
     
     db_handler = DatabaseHandler(
-        logger=logger,
+        logger=LOGGER,
         )
     
     reset_database(db_handler)
@@ -566,11 +551,9 @@ class Test__Project:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         _ = db_handler.create_organisation(
@@ -619,11 +602,9 @@ class Test__Project:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         _ = db_handler.create_organisation(
@@ -679,10 +660,8 @@ class Test__Project:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         _ = db_handler.create_organisation(
@@ -737,11 +716,9 @@ class Test__Project:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         _ = db_handler.create_organisation(
@@ -801,10 +778,8 @@ class Test__Project:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         _ = db_handler.create_organisation(
@@ -839,11 +814,9 @@ class Test__Project:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                 
         _ = db_handler.create_organisation(
@@ -903,7 +876,7 @@ class Test__Task:
     """
     
     db_handler = DatabaseHandler(
-        logger=logger,
+        logger=LOGGER,
         )
     
     reset_database(db_handler)
@@ -917,13 +890,10 @@ class Test__Task:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
-        
+                        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
-           
         
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
@@ -978,13 +948,10 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
-           
-        
+                   
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
             logo_path="ExampleLogo.png")
@@ -1037,14 +1004,11 @@ class Test__Task:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
-           
-        
+                   
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
             logo_path="ExampleLogo.png")
@@ -1098,12 +1062,9 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
-            )
-           
+            logger=LOGGER,
+            )           
         
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
@@ -1173,14 +1134,11 @@ class Test__Task:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
-           
-        
+                   
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
             logo_path="ExampleLogo.png")
@@ -1256,10 +1214,8 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )          
         
         _ = db_handler.create_organisation(
@@ -1297,10 +1253,8 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
            
         
@@ -1339,12 +1293,9 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
-            )
-           
+            logger=LOGGER,
+            )           
         
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
@@ -1381,10 +1332,8 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )          
         
         _ = db_handler.create_organisation(
@@ -1430,13 +1379,10 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
-           
-        
+                   
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
             logo_path="ExampleLogo.png")
@@ -1502,12 +1448,9 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
-            )
-           
+            logger=LOGGER,
+            )           
         
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
@@ -1573,13 +1516,10 @@ class Test__Task:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
-            )
-           
+            logger=LOGGER,
+            )           
         
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
@@ -1650,11 +1590,9 @@ class Test__Task:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
         
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                    
         _ = db_handler.create_organisation(
@@ -1728,10 +1666,8 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
                    
         _ = db_handler.create_organisation(
@@ -1805,12 +1741,9 @@ class Test__Task:
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
                 
-        logger = get_logger(test)
-        
         db_handler = DatabaseHandler(
-            logger=logger,
-            )
-           
+            logger=LOGGER,
+            )           
         
         _ = db_handler.create_organisation(
             name="Test Organ Name #1",
@@ -1868,7 +1801,7 @@ class Test__TaskItem:
     """
     
     db_handler = DatabaseHandler(
-        logger=logger,
+        logger=LOGGER,
         )
     
     reset_database(db_handler)
@@ -1882,11 +1815,9 @@ class Test__TaskItem:
         """        
         test = inspect.stack()[0][3]  # The name of this function (test)
         print(f"{test}()")
-                
-        logger = get_logger(test)
-        
+                        
         db_handler = DatabaseHandler(
-            logger=logger,
+            logger=LOGGER,
             )
         
         _ = db_handler.create_organisation(

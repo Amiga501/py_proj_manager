@@ -10,12 +10,12 @@ from pathlib import Path
 
 
 # %% py_project_manager imports
-from py_project_manager.lib.config import (
+from py_project_manager.config import (
     Config,
     )
 
 from py_project_manager.lib.logging_config import (
-    Loggers,
+    Logger,
     )
 
 # %% Module level configuration
@@ -33,7 +33,7 @@ db_handler_ = Logger(
     log_file=str(Path(Config.LOG_DIR, 
                       "db_handler.log")),
     )
-db_handler_logger = db_handler__.get_logger()
+db_handler_logger = db_handler_.get_logger()
 
 
 tests_ = Logger(
@@ -41,5 +41,5 @@ tests_ = Logger(
     log_file=str(Path(Config.LOG_DIR, 
                       "tests.log")),
     )
-tests_logger = tests__.get_logger()
+tests_logger = tests_.get_logger()
 
