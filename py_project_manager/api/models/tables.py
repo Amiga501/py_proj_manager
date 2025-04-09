@@ -17,7 +17,6 @@ critical path.
 
 """
 # %% Global imports
-from pathlib import Path
 from sqlalchemy import Column, Float, Integer, String
 from sqlalchemy.orm import DeclarativeBase
 
@@ -192,11 +191,40 @@ class Task(Base):
         self.project_id = project_id
         self.precedent_task_ids = precedent_task_ids
         self.precedent_taskitem_ids = precedent_taskitem_ids
+        
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def add_precedent_task_id(self, id_to_add: int) -> bool:
+        """!
+        **Add a precedent Task id to the Task**
+         
+        @param [in] id_to_add [int]
+        
+        @return [bool] True if successfully added
+         
+        """
+        if not isinstance(id_to_add, int):
+            LOGGER.error(
+                f"Request to add task id {id_to_add} to {self.name} as a "
+                "precedent abandoned as supplied entry is not an 'int'")
+            return False
+         
+        if id_to_add in self.get_precedent_task_ids():
+            LOGGER.error(
+                f"Request to add task id {id_to_add} to {self.name} as a "
+                "precedent abandoned as it is already a precedent")
+            return False
+         
+        precedent_ids = self.get_precedent_task_ids()
+        precedent_ids.append(id_to_add)
+         
+        self.precedent_task_ids = pyjson5.encode(sorted(precedent_ids))
+         
+        return id_to_add in self.get_precedent_task_ids()
     
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def add_precedent_taskitem_id(self, id_to_add: int) -> bool:
         """!
-        **Add a precedent TaskItem id to the TaskItem**
+        **Add a precedent TaskItem id to the Task**
         
         @param [in] id_to_add [int]
         
@@ -230,11 +258,40 @@ class Task(Base):
                 "precedent_task_ids": self.precedent_task_ids,
                 "precedent_taskitem_ids": self.precedent_taskitem_ids,
                 }
+    
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def delete_precedent_task_id(self, id_to_delete: int) -> bool:
+        """!
+        **Delete a precedent Task id from the Task**
+        
+        @param [in] id_to_delete [int]
+        
+        @return [bool] True if successfully deleted
+        
+        """
+        if not isinstance(id_to_delete, int):
+            LOGGER.error(
+                f"Request to delete task id {id_to_delete} from {self.name} "
+                "dependents abandoned as supplied entry is not an 'int'")
+            return False
+        
+        if id_to_delete not in self.get_precedent_task_ids():
+            LOGGER.error(
+                f"Request to delete task id {id_to_delete} from {self.name} "
+                "precedents abandoned as it does not exist in precedents")
+            return False
+        
+        precedent_ids = self.get_precedent_task_ids()
+        precedent_ids = [i for i in precedent_ids if i != id_to_delete]
+        
+        self.precedent_task_ids = pyjson5.encode(sorted(precedent_ids))
+        
+        return id_to_delete not in self.get_precedent_task_ids()
         
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def delete_precedent_taskitem_id(self, id_to_delete: int) -> bool:
         """!
-        **Delete a precedent TaskItem id from the TaskItem**
+        **Delete a precedent TaskItem id from the Task**
         
         @param [in] id_to_delete [int]
         
@@ -249,8 +306,9 @@ class Task(Base):
         
         if id_to_delete not in self.get_precedent_taskitem_ids():
             LOGGER.error(
-                f"Request to delete task id {id_to_delete} from {self.name} "
-                "precedents abandoned as it does not exist in precedents")
+                f"Request to delete task item id {id_to_delete} from "
+                f"{self.name} precedents abandoned as it does not exist "
+                "in precedents")
             return False
         
         precedent_ids = self.get_precedent_taskitem_ids()
@@ -259,6 +317,16 @@ class Task(Base):
         self.precedent_taskitem_ids = pyjson5.encode(sorted(precedent_ids))
         
         return id_to_delete not in self.get_precedent_taskitem_ids()
+    
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def get_precedent_task_ids(self) -> list:
+        """!
+        **Return the precedent ids as a list**
+        
+        @return [list]
+        
+        """
+        return pyjson5.decode(self.precedent_task_ids)
         
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     def get_precedent_taskitem_ids(self) -> list:
