@@ -27,6 +27,12 @@ api_models_ = Logger(
     )
 api_models_logger = api_models_.get_logger()
 
+critical_path_ = Logger(
+    logger_name="critical_path",
+    log_file=str(Path(Config.LOG_DIR, 
+                      "critical_path.log")),
+    )
+critical_path_logger = critical_path_.get_logger()
 
 db_handler_ = Logger(
     logger_name="db_handler",
