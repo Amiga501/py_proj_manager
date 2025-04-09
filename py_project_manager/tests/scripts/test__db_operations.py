@@ -2,26 +2,21 @@
 """
 Created on Sun Feb  2 20:10:35 2025
 
-@author: brend
+@author: brendan
 
 # A tester for the db_handler module
 
 """
+# TODO - there are methods within the tables objects that have not been 
+# verified - should these be here or in a separate test script?
 
 # %% Global imports
 from collections.abc import Callable
-from pathlib import Path
-from tqdm import tqdm
-
 
 import inspect
 import os
-import pyjson5
 import pytest
-import shutil
 import sqlalchemy as db
-import sys
-import time
 
 
 # %% py_project_manager imports
@@ -34,9 +29,6 @@ from py_project_manager.lib.loggers import (
 
 from py_project_manager.tests.lib.test_misc import MiscTest
 # This .py contains generic functions used across testing
-
-from py_project_manager.lib.logging_config import Logger
-# The logger
 
 # The table objects
 from py_project_manager.api.models.tables import (
@@ -96,6 +88,7 @@ class Test__HumanResource:
     """
     
     db_handler = DatabaseHandler(
+        logger=LOGGER,
         )
     
     reset_database(db_handler)
