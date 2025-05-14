@@ -11,6 +11,7 @@ Created on Sun Feb  2 20:10:35 2025
 # %% Global imports
 from collections.abc import Callable
 from pathlib import Path
+from py.xml import html  # pip install py
 from tqdm import tqdm
 
 
@@ -63,7 +64,6 @@ from py_project_manager.api.services.db_handler import (
 
 # %% Functions
 
-
 # -----------------------------------------------------------------------------
 def reset_database( 
         db_handler: Callable,
@@ -102,6 +102,7 @@ class Test__HumanResource:
         
     # -------------------------------------------------------------------------
     # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    @pytest.mark.requirements("RQ:100", "RQ:101")
     def test__create_human_resource(self=None):
         """!
         Testing simple human resource
@@ -148,6 +149,7 @@ class Test__HumanResource:
         
     # -------------------------------------------------------------------------
     # @pytest.mark.skip(reason="Reason not declared - user choice to skip")
+    @pytest.mark.requirements("RQ:101", "RQ:102")
     def test__non_unique_email(self=None):
         """!
         Testing double email
@@ -1880,11 +1882,13 @@ if __name__ == "__main__":
     outFileName = os.path.basename(__file__)[:-3]  # Remove the .py from end
     outFile = open(outFileName + ".log", "w")
     currScript = os.path.basename(__file__)
-    
+
     # -------------------------------------------------------------------------
     # ---- PyTest execution
     pytest.main([currScript, '--html', outFileName + '_report.html'])
     # Comment the above to (de)activate pyTest
+    
+    
 
     # -------------------------------------------------------------------------
     # ---- Local python execution
