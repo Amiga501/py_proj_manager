@@ -64,3 +64,8 @@ class Config:
                                     "py_project_manager",
                                     "tests",
                                     "supporting_data"))
+    
+    TEST_REPORTS = str(Path(library_dir,
+                            "py_project_manager",
+                            "tests",
+                            "reports"))

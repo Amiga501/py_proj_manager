@@ -11,6 +11,7 @@ Created on Sun Feb  2 20:10:35 2025
 # %% Global imports
 from collections.abc import Callable
 from pathlib import Path
+from pytest_jsonreport.plugin import JSONReport
 from py.xml import html  # pip install py
 from tqdm import tqdm
 
@@ -1882,10 +1883,15 @@ if __name__ == "__main__":
     outFileName = os.path.basename(__file__)[:-3]  # Remove the .py from end
     outFile = open(outFileName + ".log", "w")
     currScript = os.path.basename(__file__)
+    
+    json_plugin = JSONReport()
 
     # -------------------------------------------------------------------------
     # ---- PyTest execution
-    pytest.main([currScript, '--html', outFileName + '_report.html'])
+    pytest.main([currScript, '--html', outFileName + '_report.html',
+                 '--json-report-file=none'],
+                plugins=[json_plugin],
+                )
     # Comment the above to (de)activate pyTest
     
     
