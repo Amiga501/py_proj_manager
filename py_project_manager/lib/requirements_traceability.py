@@ -8,6 +8,13 @@ A module for generating requirements traceability from a call from pytest-json
 
 [Docstrings are in Doxygen format]
 
+This could be integrated with pytest-spiratest to check requirements assigned 
+in Spira are addressed or push further requirements back to Spira
+See: https://github.com/Inflectra/spira-testing-pytest
+The model to follow is *probably* single software requirement per .py
+If there were low level design requirements, then possibly per test class 
+within the .py
+
 """
 # %% Global modules
 from collections.abc import Callable
